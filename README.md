@@ -7,7 +7,7 @@ You can use this library in case you need transitions looks like iOS or Android 
 Usage
 -----
 
-Include mt.min.js to your project and call mt.changePage('Div id here').
+Include mt.min.js to your project and call <code>changePage('Div id here')</code>
 
 
 Questions
