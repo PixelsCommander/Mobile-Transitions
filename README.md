@@ -7,7 +7,9 @@ You can use this library in case you need transitions looks like iOS or Android 
 Usage
 -----
 
-Include mt.min.js to your project and call <code>changePage('Div id here')</code>
+1.Include mt.min.js to your project 
+2.Ass "page" class to all layers you want to use as pages
+3.Call <code>changePage('Div id here')</code> when you need it
 
 
 Questions
