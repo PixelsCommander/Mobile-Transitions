@@ -47,14 +47,22 @@
 		},
 
 		returnCenter: function (){
+			mt.currentPage.dispatchEvent(mt.getEvent('pagehide'));
 			mt.body.removeEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
 			mt.body.style['-webkit-transition-property'] = 'none';
 			mt.body.style['left'] = "100%";
 			mt.setCurrentPage(mt.pageTo);
 			setTimeout(function(){
+				mt.currentPage.dispatchEvent(mt.getEvent('pageshow'));
 				mt.body.style['-webkit-transition'] = 'left .2s ease';
 				mt.body.style.left = 0;
 			},1);
+		},
+
+		getEvent: function(type){
+			var evt = document.createEvent('Event');
+			evt.initEvent(type, true, true);
+			return evt;
 		}
 	}
 	var mt = w.mobileTransitions;
