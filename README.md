@@ -1,7 +1,7 @@
 Mobile transitions library
 =======================
 
-You can use this library in case you need transitions looks like iOS or Android native. Also it can be useful as jQuery Mobile replacement in projects that does not use any JQM interface components.
+You can use this library in case you need transitions that look like iOS or Android native. Also it can be useful as jQuery Mobile replacement in projects that does not use any JQM interface components.
 
 
 Usage
