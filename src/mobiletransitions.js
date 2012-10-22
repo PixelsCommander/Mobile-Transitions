@@ -10,6 +10,10 @@
 		},
 
 		changePage: function(pageId){
+			if (mt.currentPage === undefined){
+				mt.init();
+			}
+
 			if (pageId === mt.currentPage.id) {
 				return;
 			}

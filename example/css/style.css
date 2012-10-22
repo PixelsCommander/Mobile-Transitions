@@ -23,6 +23,10 @@ html {
     top: 0px;
 }
 
+#second {
+    display: none;
+}
+
 .preloader.background {
     background-color: #ffcc00;
 }
@@ -114,18 +118,6 @@ h1 {
 
 .site{
     background-image: url('../img/main-site-button.png');
-}
-
-.practice:active{
-    background-image: url('../img/main-practice-button-on.png');
-}
-
-.video:active{
-    background-image: url('../img/main-video-button-on.png');
-}
-
-.site:active{
-    background-image: url('../img/main-site-button-on.png');
 }
 
 .spinner-link, a:visited, a, a:hover{
