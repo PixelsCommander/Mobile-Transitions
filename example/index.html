@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Mobile transitions lite demo</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<script src="./js/energize-min.js"></script>
+		<script src="../lib/mt.min.js"></script>
+		<script src="./js/jquery-1.8.0.min.js"></script>
+		<meta name="viewport" content="width=device-width">
+	</head>
+	<body>
+		<div class="page" id="main">
+		    <div class="background-container">
+		        
+		    </div>
+
+		    <div class="logo-container">
+		        <h1>1</h1>
+		    </div>
+
+		    <div class="carusel-container">
+		        <canvas width="700px" height="700px" class="gallery" id="maingallery">
+		        </canvas>
+		    </div>
+
+		    <div class="menu-container">
+		        <a href="#">
+		            <div class="menu-item practice"></div>
+		        </a>
+		        <a href="#videocategory">
+		            <div class="menu-item video"></div>
+		        </a>
+		        <a rel="external" target="_blank" href="http://pixelscommander.com">
+		            <div class="menu-item site"></div>
+		        </a>
+		    </div>
+		</div>
+		<div class="page" id="second">
+		    <div class="background-container"></div>
+
+		    <div class="logo-container">
+		        <h1>2</h1>
+		    </div>
+
+		    <div class="carusel-container">
+		        <canvas width="700px" height="700px" class="gallery" id="maingallery">
+		        </canvas>
+		    </div>
+
+		    <div class="menu-container">
+		        <a href="#">
+		            <div class="menu-item practice"></div>
+		        </a>
+		        <a href="#videocategory">
+		            <div class="menu-item video"></div>
+		        </a>
+		        <a rel="external" target="_blank" href="http://pixelscommander.com">
+		            <div class="menu-item site"></div>
+		        </a>
+		    </div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		mt.init();
+
+		$('.video').click(function(){
+			mt.changePage('second');
+		});
+
+		$('.practice').click(function(){
+			mt.changePage('main');
+		});
+
+
+	</script>
+</html>
