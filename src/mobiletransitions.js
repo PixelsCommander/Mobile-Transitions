@@ -40,22 +40,25 @@
 			}
 
 			mt.currentPage = element;
+            mt.currentPage.style.display = 'block';
 			mt.currentPage.dispatchEvent(mt.getEvent('pageshow'));
 			mt.hideAllExceptActive();
 		},
 
 		moveLeft: function(element){
 			mt.startDate = new Date().getTime();
-			mt.pageTo.style['display'] = 'block';
-			mt.moveNextPageRight();
-			mt.body.addEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
-			mt.body.style['-webkit-transform'] = "translateX(-100%)";
+			setTimeout(function(){
+				mt.moveNextPageRight();
+                mt.pageTo.style['display'] = 'block';
+				mt.body.addEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
+				mt.body.style['-webkit-transform'] = "translateX(-100%)";
+			},1);
 		},
 
 		returnCenter: function (){
 			mt.setCurrentPage(mt.pageTo);
 			mt.body.removeEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
-			mt.body.style['-webkit-transition-property'] = 'none';
+			mt.body.style['-webkit-transition'] = 'none';
 			mt.body.style['-webkit-transform'] = "translateX(0)";
 			mt.moveNextPageLeft();
 			setTimeout(function(){
@@ -87,7 +90,7 @@
 		},
 
 		moveNextPageLeftWithTransform: function(){
-			mt.pageTo.style['-webkit-transform'] = "translateX(0)";
+			mt.pageTo.style['-webkit-transform'] = "translateX(0%)";
 		},
 
 		moveNextPageRightWithLeft: function(){
