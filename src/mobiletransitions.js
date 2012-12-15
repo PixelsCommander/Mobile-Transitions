@@ -6,7 +6,7 @@
 			mt.hideAllExceptActive();
 			mt.body = document.querySelector('body');			
 			mt.body.style['-webkit-backface-visibility'] = 'hidden';
-			mt.pageTo.style['-webkit-perspective'] = '1000';
+			mt.body.style['-webkit-perspective'] = '1000';
 			mt.body.style['-webkit-transform'] = 'translateX(0) translateZ(0)';
 			mt.body.style['-webkit-transition'] = 'all .3s ease';
 			mt.body.style['position'] = 'relative';
