@@ -4,9 +4,10 @@
 			mt.refreshPages();
 			mt.setCurrentPage(mt.transitionPages[0]);
 			mt.hideAllExceptActive();
-			mt.body = document.querySelector('body');
-			mt.body.style['-webkit-transform'] = 'translateX(0)';
+			mt.body = document.querySelector('body');			
 			mt.body.style['-webkit-backface-visibility'] = 'hidden';
+			mt.pageTo.style['-webkit-perspective'] = '1000';
+			mt.body.style['-webkit-transform'] = 'translateX(0) translateZ(0)';
 			mt.body.style['-webkit-transition'] = 'all .3s ease';
 			mt.body.style['position'] = 'relative';
 			if (mt.isMobile.any() === true) {
@@ -27,6 +28,9 @@
 				return;
 			}
 			mt.pageTo = document.getElementById(pageId);
+            mt.pageTo.style['-webkit-backface-visibility'] = 'hidden';
+            mt.pageTo.style['-webkit-perspective'] = '1000';
+            mt.pageTo.style['-webkit-transform'] = 'translateZ(0)';
 			mt.moveLeft();
 		},
 
@@ -40,7 +44,7 @@
 			}
 
 			mt.currentPage = element;
-            mt.currentPage.style.display = 'block';
+            mt.currentPage.style.visibility = 'visible';
 			mt.currentPage.dispatchEvent(mt.getEvent('pageshow'));
 			mt.hideAllExceptActive();
 		},
@@ -49,7 +53,7 @@
 			mt.startDate = new Date().getTime();
 			setTimeout(function(){
 				mt.moveNextPageRight();
-                mt.pageTo.style['display'] = 'block';
+                mt.pageTo.style.visibility = 'visible';
 				mt.body.addEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
 				mt.body.style['-webkit-transform'] = "translateX(-100%)";
 			},1);
@@ -72,9 +76,10 @@
 			mt.refreshPages();
 			for(var i = 0; i < mt.transitionPages.length; i++){
 				if (mt.transitionPages[i] !== mt.currentPage){
-					mt.transitionPages[i].style['display'] = 'none';
+					//mt.transitionPages[i].style['display'] = 'none';
+                    mt.transitionPages[i].style.visibility = 'hidden';
 				} else {
-					mt.transitionPages[i].style['display'] = 'block';
+					mt.transitionPages[i].style.visibility = 'visible';
 				}
 			}
 		},
@@ -103,19 +108,19 @@
 
 		isMobile: {
 		    Android: function() {
-		        return navigator.userAgent.match(/Android/i);
+		        return navigator.userAgent.toLowerCase().match(/android/i);
 		    },
 		    BlackBerry: function() {
-		        return navigator.userAgent.match(/BlackBerry/i);
+		        return navigator.userAgent.toLowerCase().match(/blackberry/i);
 		    },
 		    iOS: function() {
-		        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		        return navigator.userAgent.toLowerCase().match(/iphone|ipad|ipod/i);
 		    },
 		    Opera: function() {
-		        return navigator.userAgent.match(/Opera Mini/i);
+		        return navigator.userAgent.toLowerCase().match(/opera mini/i);
 		    },
 		    Windows: function() {
-		        return navigator.userAgent.match(/IEMobile/i);
+		        return navigator.userAgent.toLowerCase().match(/iemobile/i);
 		    },
 		    any: function() {
 		        return (mt.isMobile.Android() || mt.isMobile.BlackBerry() || mt.isMobile.iOS() || mt.isMobile.Opera() || mt.isMobile.Windows());
