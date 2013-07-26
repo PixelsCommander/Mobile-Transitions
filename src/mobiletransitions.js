@@ -2,17 +2,17 @@
     w.mobileTransitions = {
         init: function(){
             mt.refreshPages();
-            mt.setCurrentPage(mt.transitionPages[0]);
+            mt.setCurrentPage(mt.transitionPages[mt.transitionPages.length - 1]);
             mt.hideAllExceptActive();
             mt.body = document.querySelector('body');
-            mt.body.style['-webkit-backface-visibility'] = 'hidden';
-            mt.body.style['-webkit-perspective'] = '1000';
-            mt.body.style['-webkit-transform'] = 'translateX(0) translateZ(0)';
-            mt.body.style['-webkit-transition'] = 'all .3s ease';
-            mt.body.style['position'] = 'relative';
+            mt.transitionPages[0].parentNode.style['-webkit-backface-visibility'] = 'hidden';
+            mt.transitionPages[0].parentNode.style['-webkit-perspective'] = '1000';
+            mt.transitionPages[0].parentNode.style['-webkit-transform'] = 'translateX(0) translateZ(0)';
+            mt.transitionPages[0].parentNode.style['-webkit-transition'] = 'all .3s ease';
+            mt.transitionPages[0].parentNode.style['position'] = 'relative';
 
             //For mobile setting left works faster, for desktop translate wins
-            if (mt.isMobile.iOS() === true) {
+            if (mt.isMobile.any() === true) {
                 mt.movePageRight = mt.movePageRightWithLeft;
                 mt.movePageLeft = mt.movePageLeftWithLeft;
             } else {
@@ -56,24 +56,23 @@
 
         moveLeft: function(){
             setTimeout(function(){
-                if (mt.pageTo.wasUsed === undefined) mt.movePageRight(mt.pageTo);
+                mt.movePageRight(mt.pageTo);
                 mt.pageTo.style.visibility = 'visible';
                 mt.body.addEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
-                mt.body.style['-webkit-transform'] = "translateX(-100%)";
+                mt.pageTo.parentNode.style['-webkit-transform'] = "translateX(-100%)";
                 mt.timeFinished = Date.now();
             },1);
         },
 
         returnCenter: function (){
-            mt.movePageRight(mt.currentPage);
             mt.setCurrentPage(mt.pageTo);
             mt.body.removeEventListener( 'webkitTransitionEnd', mt.returnCenter, false);
-            mt.body.style['-webkit-transition'] = 'none';
-            mt.body.style['-webkit-transform'] = "translateX(0)";
+            mt.pageTo.parentNode.style['-webkit-transition'] = 'none';
+            mt.pageTo.parentNode.style['-webkit-transform'] = "translateX(0)";
             mt.movePageLeft(mt.pageTo);
 
             setTimeout(function(){
-                mt.body.style['-webkit-transition'] = 'all .3s ease';
+                mt.pageTo.parentNode.style['-webkit-transition'] = 'all .3s ease';
             },1);
         },
 
@@ -81,11 +80,8 @@
             mt.refreshPages();
             for(var i = 0; i < mt.transitionPages.length; i++){
                 if (mt.transitionPages[i] !== mt.currentPage){
-                    //mt.transitionPages[i].style.pointerEvents = 'hidden';
                     mt.transitionPages[i].style.visibility = 'hidden';
-                    //mt.movePageRight(mt.transitionPages[i]);
                 } else {
-                    //mt.transitionPages[i].style.pointerEvents = 'auto';
                     mt.transitionPages[i].style.visibility = 'visible';
                 }
             }
