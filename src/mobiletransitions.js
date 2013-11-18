@@ -1,32 +1,17 @@
 (function (w) {
     w.mobileTransitions = {
         init: function (pageToSet) {
-            mt.counter = 0;
-
-            if (navigator.userAgent.toLowerCase().indexOf('webkit') !== -1) {
-                mt.transitionEndEventName = 'webKitTransitionEnd';
-            } else {
-                mt.transitionEndEventName = 'transitionend';
-            }
-
-            mt.refreshPages();
+            mt.transitionTimeout = 300; //Just change to time in milliseconds you like to have
+            mt.refreshPagesList();
             mt.setCurrentPage(pageToSet || mt.transitionPages[mt.transitionPages.length - 1]);
             mt.hideAllExceptActive();
-            mt.body =  mt.transitionPages[0].parentNode;
-
-            mt.transitionPages[0].parentNode.style[this.prefix.css + 'backface-visibility'] = 'hidden';
-            mt.transitionPages[0].parentNode.style[this.prefix.css + 'transform'] = 'translateX(0) translateZ(0)';
-            mt.transitionPages[0].parentNode.style[this.prefix.css + 'transition'] = mt.prefix.css + 'transform .3s ease-in-out';
-            mt.transitionPages[0].parentNode.style.position = 'relative';
-            mt.transitionPages[0].parentNode.width = '100%';
-
-            mt.movePageRight = mt.movePageRightWithTransform;
-            mt.movePageLeft = mt.movePageLeftWithTransform;
+            mt.initCSSPrefix();
+            mt.initTransitionsSupport();
+            mt.initEventName();
+            mt.initContainer(mt.transitionPages[0].parentNode);
         },
 
         changePage: function (pageId) {
-            mt.counter++;
-
             mt.timeStarted = Date.now();
             if (mt.currentPage === undefined) {
                 mt.init();
@@ -40,7 +25,6 @@
             mt.currentPage.style.overflow = 'hidden';
 
             mt.pageTo = document.getElementById(pageId);
-            mt.pageTo.style[mt.prefix.css + 'backface-visibility'] = 'hidden';
             mt.moveLeft();
         },
 
@@ -48,33 +32,33 @@
             setTimeout(function () {
                 mt.movePageRight(mt.pageTo);
                 mt.showPage(mt.pageTo);
-                mt.body.style[mt.prefix.css + 'transform'] = "translateX(-100%)";
-                setTimeout(mt.returnCenter, 300);
+                mt.container.style[mt.cssPrefix + 'transform'] = "translateX(-100%)";
+                setTimeout(mt.returnCenter, mt.transitionTimeout);
                 mt.timeFinished = Date.now();
-            }, 1);
+            }, 0);
         },
 
         returnCenter: function (e) {
             if (e === undefined || e.target === mt.pageTo.parentNode) {
                 mt.hidePage(mt.currentPage);
                 mt.setCurrentPage(mt.pageTo);
-                mt.pageTo.parentNode.style[mt.prefix.css + 'transition'] = 'none';
-                mt.pageTo.parentNode.style[mt.prefix.css + 'transform'] = "translateX(0)";
+                mt.pageTo.parentNode.style[mt.cssPrefix + 'transition'] = 'none';
+                mt.pageTo.parentNode.style[mt.cssPrefix + 'transform'] = "translateX(0)";
                 mt.movePageLeft(mt.pageTo);
-
                 setTimeout(function () {
-                    mt.pageTo.parentNode.style[mt.prefix.css + 'transition'] = mt.prefix.css + 'transform .3s ease-in-out';
-                }, 1);
+                    mt.pageTo.parentNode.style[mt.cssPrefix + 'transition'] = mt.cssPrefix + 'transform ' + mt.transitionTimeout + 'ms ease-in-out';
+                }, 0);
             }
         },
 
-        refreshPages: function () {
+        refreshPagesList: function () {
             mt.transitionPages = document.querySelectorAll('.page');
 
             for (var i = 0; i < mt.transitionPages.length; i++) {
                 mt.transitionPages[i].style.position = 'absolute';
                 mt.transitionPages[i].style.left = '0px';
                 mt.transitionPages[i].style.top = '0px';
+                mt.transitionPages[i].style[mt.cssPrefix + 'backface-visibility'] = 'hidden';
             }
         },
 
@@ -91,7 +75,7 @@
         },
 
         hideAllExceptActive: function () {
-            mt.refreshPages();
+            //mt.refreshPagesList();
             for (var i = 0; i < mt.transitionPages.length; i++) {
                 if (mt.transitionPages[i] !== mt.currentPage) {
                     this.hidePage(mt.transitionPages[i]);
@@ -102,16 +86,20 @@
         },
 
         hidePage: function (page) {
-            page.style.visibility = 'hidden';
-            if (mt.currentPage.onhide !== undefined && mt.currentPage.onhide !== null) {
-                mt.currentPage.onhide();
+            if (page.style.visibility !== 'hidden') {
+                page.style.visibility = 'hidden';
+                if (mt.currentPage !== undefined && mt.currentPage.onhide !== undefined && mt.currentPage.onhide !== null) {
+                    mt.currentPage.onhide();
+                }
             }
         },
 
         showPage: function (page) {
-            page.style.visibility = 'visible';
-            if (mt.currentPage.onshow !== undefined && mt.currentPage.onshow !== null) {
-                mt.currentPage.onshow();
+            if (page.style.visibility !== 'visible') {
+                page.style.visibility = 'visible';
+                if (mt.currentPage.onshow !== undefined && mt.currentPage.onshow !== null) {
+                    mt.currentPage.onshow();
+                }
             }
         },
 
@@ -121,17 +109,45 @@
             return evt;
         },
 
-        movePageLeftWithTransform: function (pageNode) {
-            console.log('moved left ' + pageNode.id);
-            pageNode.style[mt.prefix.css + 'transform'] = "translateX(0px)";
+        movePageLeft: function (pageNode) {
+            //console.log('moved left ' + pageNode.id);
+            pageNode.style[mt.cssPrefix + 'transform'] = "translateX(0px)";
         },
 
-        movePageRightWithTransform: function (pageNode) {
-            console.log('moved right ' + pageNode.id);
-            pageNode.style[mt.prefix.css + 'transform'] = "translateX(100%)";
+        movePageRight: function (pageNode) {
+            //console.log('moved right ' + pageNode.id);
+            pageNode.style[mt.cssPrefix + 'transform'] = "translateX(100%)";
         },
 
-        prefix: (function () {
+        initEventName: function () {
+            if (navigator.userAgent.toLowerCase().indexOf('webkit') !== -1) {
+                mt.transitionEndEventName = 'webKitTransitionEnd';
+            } else {
+                mt.transitionEndEventName = 'transitionend';
+            }
+        },
+
+        initContainer: function (node) {
+            mt.container = node;
+            node.style[mt.cssPrefix + 'backface-visibility'] = 'hidden';
+            node.style[mt.cssPrefix + 'transform'] = 'translateX(0) translateZ(0)';
+            node.style[mt.cssPrefix + 'transition'] = mt.cssPrefix + 'transform ' + mt.transitionTimeout + 'ms ease-in-out';
+            node.style.position = 'relative';
+            node.width = '100%';
+        },
+
+        initTransitionsSupport: function () {
+            var ieVersion = (navigator.userAgent.indexOf('msie') !== -1) ? parseInt(navigator.userAgent.split('msie')[1], 10) : false;
+
+            if (ieVersion !== false && ieVersion < 10) {
+                mt.transitionTimeout = 0;
+                mt.transitionsSupported = false;
+            } else {
+                mt.transitionsSupported = true;
+            }
+        },
+
+        initCSSPrefix: function () {
             var styles = window.getComputedStyle(document.documentElement, ''),
                 pre = (Array.prototype.slice
                     .call(styles)
@@ -140,18 +156,8 @@
                     )[1] || '',
                 dom = ('WebKit|MS|O').match(new RegExp('(' + pre + ')', 'i'))[1] || '';
 
-            var cssPrefix = pre === '' ? '' : '-' + pre + '-';
-            var jsPrefix = pre.length === 0 ? '' : pre[0].toUpperCase() + pre.substr(1);
-
-            var result = {
-                dom: dom,
-                lowercase: pre,
-                css: cssPrefix,
-                js: jsPrefix
-            }
-
-            return result;
-        })()
+            mt.cssPrefix = pre === '' ? '' : '-' + pre + '-';
+        }
     }
     var mt = w.mobileTransitions;
     window.mt = w.mobileTransitions;
